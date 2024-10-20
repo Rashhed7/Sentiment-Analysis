@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Sentiment Analysis Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column; /* Allow footer to stay at bottom */
+            min-height: 100vh; /* Ensures body takes full height */
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        nav {
+            width: 200px;
+            background-color: #333;
+            padding-top: 60px; /* Adjust for header height */
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        nav a {
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .content {
+            margin-left: 220px; /* Adjust according to nav width */
+            padding: 20px;
+            margin-top: 60px; /* Adjust according to header height */
+            flex: 1;
+        }
+        .contact-form {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto; /* Center the form */
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Ensures padding is included in total width */
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto; /* Push the footer to the bottom */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Contact Us</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#about">About</a>
+        <a href="reports.html">Reports</a>
+        <a href="settings.html">Settings</a>
+        <a href="home.html">Logout</a>
+    </nav>
+
+    <div class="content">
+        <div class="contact-form">
+            <h2>Get in Touch</h2>
+            <form id="contact-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <input type="submit" value="Send Message">
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>Built by: <strong>TEAM KNOX</strong></p>
+        <p>Team Members: Abdul Rasheed, Huzaif Haris, Mohammed Umer Farooq, Mohammed Nashal</p>
+    </footer>
+</body>
+</html>

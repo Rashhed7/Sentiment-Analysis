@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Sentiment Analysis Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column; /* Allow footer to stay at bottom */
+            min-height: 100vh; /* Ensures body takes full height */
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        nav {
+            width: 200px;
+            background-color: #333;
+            padding-top: 60px; /* Adjust for header height */
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        nav a {
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+            transition: background 0.3s;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .content {
+            margin-left: 220px; /* Adjust according to nav width */
+            padding: 20px;
+            margin-top: 60px; /* Adjust according to header height */
+            flex: 1;
+        }
+        h2 {
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto; /* Push the footer to the bottom */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sentiment Analysis Dashboard - Settings</h1>
+    </header>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#about">About</a>
+        <a href="reports.html">Reports</a>
+        <a href="settings.html">Settings</a>
+        <a href="home.html">Logout</a>
+    </nav>
+    <div class="content">
+        <h2>Settings</h2>
+        <p>This is the Settings page. You can modify settings here.</p>
+        <h3>General Settings</h3>
+        <form id="settings-form">
+            <label for="language">Select Language:</label>
+            <select id="language" name="language">
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+            </select>
+            <br><br>
+            <label for="theme">Select Theme:</label>
+            <select id="theme" name="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+            </select>
+            <br><br>
+            <input type="submit" value="Save Settings" style="background-color: #4CAF50; color: white; border: none; padding: 10px 15px; cursor: pointer;">
+        </form>
+    </div>
+    <footer>
+        <p>Built by: <strong>TEAM KNOX</strong></p>
+        <p>Team Members: Abdul Rasheed, Huzaif Haris, Mohammed Umer Farooq, Mohammed Nashal</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column; /* Added to allow footer to stay at bottom */
+            min-height: 100vh; /* Ensures the body takes full height */
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+        nav {
+            width: 200px;
+            background-color: #333;
+            padding-top: 20px;
+            position: fixed;
+            height: 100%;
+            overflow: auto;
+        }
+        nav a {
+            padding: 15px;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+        nav a:hover {
+            background-color: #575757;
+        }
+        .content {
+            margin-left: 220px; /* Adjust this value according to the width of your nav */
+            padding: 20px;
+            margin-top: 60px; /* Adjust this value according to your header height */
+            flex: 1;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .emoji {
+            font-size: 24px; /* Adjust the size as needed */
+        }
+        .upload-form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #myChart {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto; /* Center the chart */
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto; /* Push the footer to the bottom */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sentiment Analysis Dashboard</h1>
+    </header>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="reports.html">Reports</a>
+        <a href="settings.html">Settings</a>
+        <a href="home.html">Logout</a>
+    </nav>
+    <div class="content">
+        <div class="upload-form">
+            <h2>Upload File</h2>
+            <form id="upload-form">
+                <input type="file" id="file" name="file" required><br><br>
+                <input type="submit" value="Upload">
+            </form>
+            <p id="result"></p>
+        </div>
+        <div id="output"></div>
+        <canvas id="myChart"></canvas> <!-- Canvas for Chart.js -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function(event) {
+            event.preventDefault();  // Prevent the default form submission
+            
+            const formData = new FormData();
+            const fileInput = document.getElementById('file');
+            
+            if (!fileInput.files.length) {
+                alert("Please select a file.");
+                return;
+            }
+
+            formData.append('file', fileInput.files[0]);
+
+            fetch('http://127.0.0.1:5000/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const resultElement = document.getElementById('result');
+
+                if (data.error) {
+                    resultElement.innerText = `Error: ${data.error}`;
+                } else {
+                    resultElement.innerText = `Success: ${data.message}`;
+
+                    // Create a table to display the output data
+                    const table = document.createElement('table');
+                    
+                    // Create table headers
+                    const headers = ['Comment', 'Sentiment', 'Polarity', 'Emoji'];
+                    const headerRow = document.createElement('tr');
+                    headers.forEach(header => {
+                        const th = document.createElement('th');
+                        th.innerText = header;
+                        headerRow.appendChild(th);
+                    });
+                    table.appendChild(headerRow);
+
+                    // Define emojis for each sentiment
+                    const sentimentEmojis = {
+                        'Positive': '😊',   // Happy emoji
+                        'Negative': '😢',   // Sad emoji
+                        'Neutral': '😐'     // Neutral emoji
+                    };
+
+                    // Sentiment counts for the bar graph
+                    const sentimentCounts = {
+                        Positive: 0,
+                        Negative: 0,
+                        Neutral: 0
+                    };
+
+                    // Create rows for the data
+                    data.data.forEach(row => {
+                        const tableRow = document.createElement('tr');
+                        const cells = [row.comment, row.sentiment, row.polarity, sentimentEmojis[row.sentiment]]; // Extract relevant data and emoji
+                        cells.forEach(cell => {
+                            const td = document.createElement('td');
+                            td.innerText = cell; // Fill in the data
+                            tableRow.appendChild(td);
+                        });
+                        table.appendChild(tableRow);
+
+                        // Increment the sentiment count
+                        sentimentCounts[row.sentiment]++;
+                    });
+
+                    // Clear previous result and append new table
+                    document.getElementById('output').innerHTML = ""; // Clear previous output
+                    document.getElementById('output').appendChild(table); // Add the new table
+
+                    // Create the bar chart
+                    const ctx = document.getElementById('myChart').getContext('2d');
+                    const myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Positive', 'Negative', 'Neutral'],
+                            datasets: [{
+                                label: 'Sentiment Count',
+                                data: [sentimentCounts.Positive, sentimentCounts.Negative, sentimentCounts.Neutral],
+                                backgroundColor: [
+                                    'rgba(75, 192, 192, 0.6)', // Color for Positive
+                                    'rgba(255, 99, 132, 0.6)', // Color for Negative
+                                    'rgba(255, 206, 86, 0.6)'  // Color for Neutral
+                                ],
+                                borderColor: [
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(255, 206, 86, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    display: false // Hide the legend
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = "An error occurred during file upload.";
+            });
+        });
+    </script>
+    
+    <footer>
+        <p>Built by: <strong>TEAM KNOX</strong></p>
+        <p>Team Members: Abdul Rasheed, Huzaif Haris, Mohammed Umer Farooq, Mohammed Nashal</p>
+    </footer>
+</body>
+</html>
